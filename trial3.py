@@ -217,13 +217,11 @@ NN_model = Sequential()
 NN_model.add(Dense(64, kernel_initializer='normal',input_dim = 114))
 
 # The Hidden Layers 
-NN_model.add(Dense(128, kernel_initializer='normal',activation='relu'))
+#NN_model.add(Dense(128, kernel_initializer='normal',activation='relu'))
+#NN_model.add(Dropout(0.5))
+NN_model.add(Dense(256, kernel_initializer='normal',activation='linear'))
 NN_model.add(Dropout(0.5))
-NN_model.add(Dense(256, kernel_initializer='normal',activation='relu'))
-NN_model.add(Dropout(0.5))
-NN_model.add(Dense(512, kernel_initializer='normal',activation='relu'))
-NN_model.add(Dropout(0.5))
-NN_model.add(Dense(128, kernel_initializer='normal',activation='relu'))
+NN_model.add(Dense(512, kernel_initializer='normal',activation='linear'))
 
 # The Output Layer 
 NN_model.add(Dense(123, kernel_initializer='normal',activation='linear'))
@@ -237,3 +235,11 @@ predictions = NN_model.predict(im)
 
 # Final Predictions
 pred = model.predict([im,predictions])
+
+# Read the actual predicted scores of validation set
+predic = pd.read_csv('D:/Directed Research - Prof Anand Joshi/pred_validation_template.csv')  
+actual = pd.read_csv('D:/Directed Research - Prof Anand Joshi/gt_validation.csv')
+
+predic['predicted_score'] = pred
+mse = mean_squared_error(actual['fluid.resid'], predic['predicted_score'])
+r = r2_score(actual['fluid.resid'], predic['predicted_score'])
